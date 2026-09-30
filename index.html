@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNAPS - Skill Network And Profesional Service</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+        .glass-header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 9999px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+    <!-- NAVBAR -->
+    <header class="sticky top-0 z-40 glass-header border-b border-slate-200 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-400 flex items-center justify-center text-white font-black text-xl shadow-md shadow-indigo-200">
+                        S
+                    </div>
+                    <div>
+                        <span class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 tracking-tight">SNAPS</span>
+                        <span class="hidden sm:inline-block text-[10px] font-semibold tracking-widest text-indigo-500 uppercase block -mt-1">Skill Network</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Nav Navigation -->
+                <nav class="hidden md:flex items-center space-x-1">
+                    <button onclick="navigateTo('home')" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition">Beranda</button>
+                    <button onclick="navigateTo('search')" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition">Cari Skill</button>
+                    <button onclick="navigateTo('categories')" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition">Kategori</button>
+                    <button onclick="navigateTo('about')" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition">Tentang</button>
+                </nav>
+
+                <!-- Auth / User Button -->
+                <div class="flex items-center space-x-3" id="nav-auth-section">
+                    <!-- Dynamic rendering by JS -->
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-slate-600 hover:text-slate-900 focus:outline-none p-2">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden border-b border-slate-200 bg-white px-4 pt-2 pb-4 space-y-2">
+            <button onclick="navigateTo('home')" class="block w-full text-left px-3 py-2 rounded-md text-slate-700 hover:bg-indigo-50 font-medium">Beranda</button>
+            <button onclick="navigateTo('search')" class="block w-full text-left px-3 py-2 rounded-md text-slate-700 hover:bg-indigo-50 font-medium">Cari Skill</button>
+            <button onclick="navigateTo('categories')" class="block w-full text-left px-3 py-2 rounded-md text-slate-700 hover:bg-indigo-50 font-medium">Kategori</button>
+            <button onclick="navigateTo('about')" class="block w-full text-left px-3 py-2 rounded-md text-slate-700 hover:bg-indigo-50 font-medium">Tentang</button>
+            <div id="mobile-auth-section" class="pt-2 border-t border-slate-100"></div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow">
+
+        <!-- ================================================================= -->
+        <!-- 1. BERANDA -->
+        <!-- ================================================================= -->
+        <section id="page-home" class="page-section active">
+            <!-- Hero Section -->
+            <div class="relative overflow-hidden bg-gradient-to-b from-indigo-50/70 via-white to-slate-50 py-16 sm:py-24">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700 mb-6 animate-pulse">
+                        <i class="fa-solid fa-sparkles text-indigo-500"></i> Platform Pertukaran Skill #1 di Indonesia
+                    </span>
+                    <h1 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tight max-w-4xl mx-auto leading-tight">
+                        Temukan Skill, <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-violet-600 to-pink-500">Temukan Solusi.</span>
+                    </h1>
+                    <p class="mt-6 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                        SNAPS membantu kamu menemukan orang dengan skill yang kamu butuhkan atau memperkenalkan skill unggulan yang kamu miliki ke ribuan pencari jasa.
+                    </p>
+
+                    <!-- Search Bar in Hero -->
+                    <div class="mt-8 max-w-2xl mx-auto">
+                        <form onsubmit="handleHeroSearch(event)" class="flex flex-col sm:flex-row gap-2 bg-white p-2 rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100">
+                            <div class="flex-grow flex items-center px-4 py-2">
+                                <i class="fa-solid fa-magnifying-glass text-slate-400 mr-3 text-lg"></i>
+                                <input type="text" id="hero-search-input" placeholder="Cari skill seperti Desain, Mengajar, Web Dev..." class="w-full text-slate-700 focus:outline-none text-base">
+                            </div>
+                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-3.5 rounded-xl transition shadow-lg shadow-indigo-200 flex items-center justify-center gap-2">
+                                <span>Cari Skill</span>
+                                <i class="fa-solid fa-arrow-right text-sm"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Call to Actions Buttons -->
+                    <div class="mt-8 flex flex-wrap justify-center gap-4">
+                        <button onclick="openRegisterRoleModal('provider')" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-3 rounded-xl transition shadow-md flex items-center gap-2">
+                            <i class="fa-solid fa-briefcase text-indigo-400"></i> Daftarkan Skill Saya
+                        </button>
+                        <button onclick="openRegisterRoleModal('seeker')" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-semibold px-6 py-3 rounded-xl transition shadow-sm flex items-center gap-2">
+                            <i class="fa-solid fa-user-search text-emerald-500"></i> Cari Sebagai User
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="bg-indigo-900 text-white py-8 border-y border-indigo-800">
+                <div class="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                    <div>
+                        <div class="text-3xl font-extrabold text-indigo-300" id="stat-total-users-home">0</div>
+                        <div class="text-xs uppercase tracking-wider text-indigo-200 mt-1">Pengguna Terdaftar</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-extrabold text-indigo-300" id="stat-total-skills-home">0</div>
+                        <div class="text-xs uppercase tracking-wider text-indigo-200 mt-1">Skill Tersedia</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-extrabold text-indigo-300" id="stat-total-categories-home">0</div>
+                        <div class="text-xs uppercase tracking-wider text-indigo-200 mt-1">Kategori Skill</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-extrabold text-indigo-300">99%</div>
+                        <div class="text-xs uppercase tracking-wider text-indigo-200 mt-1">Respon Cepat via WA</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Categories -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="flex justify-between items-end mb-10">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">Kategori Populer</h2>
+                        <p class="text-slate-500 mt-1">Jelajahi berbagai keahlian yang paling banyak dicari</p>
+                    </div>
+                    <button onclick="navigateTo('categories')" class="text-indigo-600 font-semibold hover:text-indigo-700 flex items-center gap-1 text-sm">
+                        Lihat Semua <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+                <div id="home-categories-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Featured Skill Providers -->
+            <div class="bg-slate-100/70 py-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-end mb-10">
+                        <div>
+                            <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">Talenta & Skill Teratas</h2>
+                            <p class="text-slate-500 mt-1">Temukan profesional dan freelancer berbakat siap membantu Anda</p>
+                        </div>
+                        <button onclick="navigateTo('search')" class="text-indigo-600 font-semibold hover:text-indigo-700 flex items-center gap-1 text-sm">
+                            Lihat Semua Skill <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </button>
+                    </div>
+                    <div id="home-featured-skills" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- 2. HALAMAN CARI SKILL -->
+        <!-- ================================================================= -->
+        <section id="page-search" class="page-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-slate-900">Eksplorasi Skill & Jasa</h1>
+                <p class="text-slate-500 mt-1">Cari dan terhubung dengan pemilik skill terbaik sesuai kebutuhan Anda.</p>
+            </div>
+
+            <!-- Search Filter Bar -->
+            <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200 mb-8 space-y-4">
+                <!-- Search Keyword -->
+                <div class="relative">
+                    <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                    <input type="text" id="search-keyword-input" oninput="applyFilters()" placeholder="Skill apa yang kamu cari? (misal: Desain, Video, Math, Servis)" class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800">
+                </div>
+
+                <!-- Filters Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+                    <!-- Kategori -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Kategori</label>
+                        <select id="filter-category" onchange="applyFilters()" class="w-full p-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                            <option value="">Semua Kategori</option>
+                        </select>
+                    </div>
+
+                    <!-- Lokasi / Domisili -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Domisili / Lokasi</label>
+                        <select id="filter-location" onchange="applyFilters()" class="w-full p-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                            <option value="">Semua Domisili</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter Pengalaman -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1.5">Pengalaman Minim</label>
+                        <select id="filter-experience" onchange="applyFilters()" class="w-full p-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                            <option value="0">Semua Pengalaman</option>
+                            <option value="1">Minimal 1 Tahun</option>
+                            <option value="2">Minimal 2 Tahun</option>
+                            <option value="3">Minimal 3+ Tahun</option>
+                        </select>
+                    </div>
+
+                    <!-- Reset Filter -->
+                    <div class="flex items-end">
+                        <button onclick="resetFilters()" class="w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-lg transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> Reset Filter
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Results -->
+            <div class="flex justify-between items-center mb-6">
+                <p class="text-sm text-slate-500">Menampilkan <span id="search-result-count" class="font-bold text-slate-800">0</span> pemilik skill</p>
+            </div>
+
+            <div id="search-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Skill cards populated via JS -->
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- 3. DETAIL PROFIL PEMILIK SKILL -->
+        <!-- ================================================================= -->
+        <section id="page-detail" class="page-section max-w-4xl mx-auto px-4 py-10">
+            <button onclick="navigateTo('search')" class="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-800">
+                <i class="fa-solid fa-arrow-left"></i> Kembali ke Pencarian
+            </button>
+
+            <div id="detail-profile-container" class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                <!-- Dynamic profile header & content inserted via JS -->
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- 4. DASHBOARD USER -->
+        <!-- ================================================================= -->
+        <section id="page-dashboard-user" class="page-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-slate-900" id="dash-user-welcome">Selamat Datang, User</h1>
+                    <p class="text-slate-500 mt-1">Kelola informasi profil, status ketersediaan, dan preferensi Anda.</p>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="openEditProfileModal()" class="px-4 py-2 bg-indigo-50 border border-indigo-200 text-indigo-600 hover:bg-indigo-100 font-semibold text-sm rounded-xl transition flex items-center gap-2">
+                        <i class="fa-solid fa-user-gear"></i> Edit Profil
+                    </button>
+                    <button onclick="handleLogout()" class="px-4 py-2 bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 font-semibold text-sm rounded-xl transition flex items-center gap-2">
+                        <i class="fa-solid fa-right-from-bracket"></i> Keluar
+                    </button>
+                </div>
+            </div>
+
+            <div id="dashboard-user-content">
+                <!-- Dynamically populated based on User Role (Provider vs Seeker) -->
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- 5. DASHBOARD ADMIN -->
+        <!-- ================================================================= -->
+        <section id="page-dashboard-admin" class="page-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <span class="px-3 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full uppercase tracking-wide">Akses Administrator</span>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mt-1">Dashboard Kontrol Admin</h1>
+                </div>
+                <button onclick="handleLogout()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 text-sm font-semibold rounded-xl transition flex items-center gap-2">
+                    <i class="fa-solid fa-power-off"></i> Logout Admin
+                </button>
+            </div>
+
+            <!-- Stats Overview Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="text-slate-500 text-xs font-semibold uppercase">Total Pengguna</div>
+                    <div class="text-3xl font-black text-slate-800 mt-2" id="admin-stat-users">0</div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="text-slate-500 text-xs font-semibold uppercase">Pemilik Skill</div>
+                    <div class="text-3xl font-black text-indigo-600 mt-2" id="admin-stat-providers">0</div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="text-slate-500 text-xs font-semibold uppercase">Pencari Skill</div>
+                    <div class="text-3xl font-black text-emerald-600 mt-2" id="admin-stat-seekers">0</div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="text-slate-500 text-xs font-semibold uppercase">Total Skill</div>
+                    <div class="text-3xl font-black text-violet-600 mt-2" id="admin-stat-skills">0</div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="text-slate-500 text-xs font-semibold uppercase">Kategori</div>
+                    <div class="text-3xl font-black text-amber-600 mt-2" id="admin-stat-categories">0</div>
+                </div>
+            </div>
+
+            <!-- Admin Tabs Navigation -->
+            <div class="flex border-b border-slate-200 mb-6 gap-2">
+                <button onclick="switchAdminTab('users')" id="tab-btn-users" class="admin-tab-btn py-3 px-5 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600">
+                    <i class="fa-solid fa-users mr-2"></i>Kelola Pengguna
+                </button>
+                <button onclick="switchAdminTab('skills')" id="tab-btn-skills" class="admin-tab-btn py-3 px-5 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-700">
+                    <i class="fa-solid fa-award mr-2"></i>Kelola Skill
+                </button>
+                <button onclick="switchAdminTab('categories')" id="tab-btn-categories" class="admin-tab-btn py-3 px-5 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-700">
+                    <i class="fa-solid fa-folder-tree mr-2"></i>Kelola Kategori
+                </button>
+            </div>
+
+            <!-- TAB 1: KELOLA PENGGUNA -->
+            <div id="admin-tab-users" class="admin-tab-content">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg text-slate-800">Daftar Seluruh Pengguna</h3>
+                    <button onclick="openAddUserModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl transition flex items-center gap-2">
+                        <i class="fa-solid fa-user-plus"></i> Tambah Pengguna
+                    </button>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-50 text-slate-700 uppercase text-xs font-bold border-b border-slate-200">
+                                <tr>
+                                    <th class="p-4">Pengguna</th>
+                                    <th class="p-4">Role</th>
+                                    <th class="p-4">Domisili</th>
+                                    <th class="p-4">Kontak</th>
+                                    <th class="p-4">Status</th>
+                                    <th class="p-4 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-users-table-body">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: KELOLA SKILL -->
+            <div id="admin-tab-skills" class="admin-tab-content hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg text-slate-800">Daftar Seluruh Skill Terdaftar</h3>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-50 text-slate-700 uppercase text-xs font-bold border-b border-slate-200">
+                                <tr>
+                                    <th class="p-4">Pemilik Skill</th>
+                                    <th class="p-4">Nama Skill</th>
+                                    <th class="p-4">Kategori</th>
+                                    <th class="p-4">Tarif</th>
+                                    <th class="p-4">Pengalaman</th>
+                                    <th class="p-4 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-skills-table-body">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: KELOLA KATEGORI -->
+            <div id="admin-tab-categories" class="admin-tab-content hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg text-slate-800">Daftar Kategori Skill</h3>
+                    <button onclick="openAddCategoryModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl transition flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Tambah Kategori
+                    </button>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden max-w-2xl">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-50 text-slate-700 uppercase text-xs font-bold border-b border-slate-200">
+                            <tr>
+                                <th class="p-4">Icon</th>
+                                <th class="p-4">Nama Kategori</th>
+                                <th class="p-4 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-categories-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- 6. KATEGORI & TENTANG PAGES -->
+        <!-- ================================================================= -->
+        <section id="page-categories" class="page-section max-w-7xl mx-auto px-4 py-10">
+            <h1 class="text-3xl font-bold text-slate-900 mb-2">Semua Kategori Skill</h1>
+            <p class="text-slate-500 mb-8">Pilih kategori untuk melihat para ahli di bidangnya.</p>
+            <div id="full-categories-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <section id="page-about" class="page-section max-w-4xl mx-auto px-4 py-12">
+            <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-center">
+                <div class="w-20 h-20 bg-indigo-600 text-white text-4xl font-extrabold rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-200">
+                    S
+                </div>
+                <h1 class="text-3xl font-extrabold text-slate-900 mb-4">Tentang SNAPS</h1>
+                <p class="text-slate-600 text-lg leading-relaxed max-w-2xl mx-auto mb-8">
+                    <strong class="text-indigo-600">SNAPS (Skill Network And Profesional Service)</strong> adalah platform jaringan sosial interaktif yang dirancang khusus untuk mempermudah koneksi antara pemilik jasa/keterampilan dengan pencari skill di seluruh Indonesia.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left mt-8 pt-8 border-t border-slate-100">
+                    <div class="bg-slate-50 p-5 rounded-2xl">
+                        <i class="fa-solid fa-bolt text-indigo-600 text-2xl mb-3"></i>
+                        <h4 class="font-bold text-slate-800 mb-1">Cepat & Praktis</h4>
+                        <p class="text-xs text-slate-500">Terhubung langsung melalui WhatsApp tanpa perantara yang membingungkan.</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-2xl">
+                        <i class="fa-solid fa-users text-indigo-600 text-2xl mb-3"></i>
+                        <h4 class="font-bold text-slate-800 mb-1">Inklusif</h4>
+                        <p class="text-xs text-slate-500">Terbuka untuk mahasiswa, pekerja, freelancer, hingga UMKM lokal.</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-2xl">
+                        <i class="fa-solid fa-shield-halved text-indigo-600 text-2xl mb-3"></i>
+                        <h4 class="font-bold text-slate-800 mb-1">Terverifikasi</h4>
+                        <p class="text-xs text-slate-500">Semua skill dan portofolio ditampilkan secara transparan dan valid.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-10 border-t border-slate-800 mt-16">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-black text-sm">S</div>
+                <span class="text-xl font-black text-white tracking-tight">SNAPS</span>
+            </div>
+            <p class="text-xs text-slate-500 max-w-md mx-auto mb-6">Skill Network And Profesional Service - Menghubungkan potensi dengan kesempatan.</p>
+            <p class="text-xs text-slate-600">&copy; 2026 SNAPS Interactive Prototype. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ================================================================= -->
+    <!-- MODALS & DIALOGS -->
+    <!-- ================================================================= -->
+
+    <!-- LOGIN MODAL -->
+    <div id="modal-login" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative">
+            <button onclick="closeModal('modal-login')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <h2 class="text-2xl font-extrabold text-slate-900 mb-1">Masuk ke SNAPS</h2>
+            <p class="text-sm text-slate-500 mb-6">Silakan masuk menggunakan akun Anda</p>
+
+            <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Email</label>
+                    <input type="email" id="login-email" required placeholder="nama@email.com" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Password</label>
+                    <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+                </div>
+
+                <div class="bg-indigo-50 p-3 rounded-xl text-xs text-indigo-700 space-y-1">
+                    <p class="font-bold"><i class="fa-solid fa-circle-info mr-1"></i> Akun Demo Admin:</p>
+                    <p>Email: <span class="font-mono font-semibold">admin@snaps.com</span> | Pass: <span class="font-mono font-semibold">admin123</span></p>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 transition">
+                    Masuk Sekarang
+                </button>
+            </form>
+
+            <p class="mt-6 text-center text-sm text-slate-500">
+                Belum punya akun? <a href="#" onclick="closeModal('modal-login'); openRegisterRoleModal(); return false;" class="text-indigo-600 font-bold hover:underline">Daftar Sekarang</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- REGISTER ROLE SELECTION MODAL -->
+    <div id="modal-role-select" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative text-center">
+            <button onclick="closeModal('modal-role-select')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Pendaftaran SNAPS</h2>
+            <p class="text-sm text-slate-500 mb-6">Pilih peran pendaftaran yang sesuai dengan Anda:</p>
+
+            <div class="space-y-4">
+                <button onclick="proceedRegistration('provider')" class="w-full p-5 border-2 border-indigo-200 hover:border-indigo-600 rounded-2xl flex items-center gap-4 transition group text-left bg-indigo-50/50 hover:bg-indigo-50">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800">Saya Punya Skill</h4>
+                        <p class="text-xs text-slate-500 mt-0.5">Ingin menawarkan keahlian & mendapatkan klien</p>
+                    </div>
+                </button>
+
+                <button onclick="proceedRegistration('seeker')" class="w-full p-5 border-2 border-slate-200 hover:border-emerald-500 rounded-2xl flex items-center gap-4 transition group text-left bg-slate-50/50 hover:bg-emerald-50/50">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition">
+                        <i class="fa-solid fa-user-search"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800">Saya Mencari Skill</h4>
+                        <p class="text-xs text-slate-500 mt-0.5">Mencari tenaga ahli/freelancer untuk kebutuhan saya</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTER FORM MODAL -->
+    <div id="modal-register-form" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="closeModal('modal-register-form')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <span id="reg-form-role-badge" class="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full">Role</span>
+            <h2 class="text-2xl font-extrabold text-slate-900 mt-2 mb-6" id="reg-form-title">Formulir Pendaftaran</h2>
+
+            <form onsubmit="handleRegisterSubmit(event)" class="space-y-4">
+                <input type="hidden" id="reg-role" value="provider">
+
+                <!-- Shared User Info -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Nama Lengkap *</label>
+                        <input type="text" id="reg-name" required placeholder="Contoh: Aulia" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Email *</label>
+                        <input type="email" id="reg-email" required placeholder="aulia@gmail.com" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Nomor WhatsApp *</label>
+                        <input type="tel" id="reg-phone" required placeholder="08123456789" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Password *</label>
+                        <input type="password" id="reg-password" required placeholder="••••••••" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Domisili / Kota *</label>
+                        <input type="text" id="reg-location" required placeholder="Contoh: Bangkalan / Surabaya" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">URL Foto Profil (Opsional)</label>
+                        <input type="url" id="reg-avatar" placeholder="https://images.unsplash.com/..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- SPECIFIC FIELDS FOR PROVIDER -->
+                <div id="provider-fields" class="space-y-4 pt-4 border-t border-slate-200">
+                    <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-award text-indigo-600"></i> Detail Skill & Jasa
+                    </h4>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Nama Skill Utama *</label>
+                            <input type="text" id="reg-skill-name" placeholder="Contoh: Desain Grafis & Logo" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Kategori Skill *</label>
+                            <select id="reg-skill-category" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
+                                <!-- Dynamically populated -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Pengalaman (Tahun) *</label>
+                            <input type="number" id="reg-skill-exp" min="0" placeholder="Contoh: 2" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Tarif / Jasa (Opsional)</label>
+                            <input type="text" id="reg-skill-price" placeholder="Contoh: Mulai Rp50.000" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Deskripsi Skill *</label>
+                        <textarea id="reg-skill-desc" rows="3" placeholder="Jelaskan detail keahlian dan layanan yang Anda berikan..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Link Portofolio (Opsional)</label>
+                        <input type="url" id="reg-skill-portfolio" placeholder="https://behance.net/username atau drive link" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- SPECIFIC FIELDS FOR SEEKER -->
+                <div id="seeker-fields" class="space-y-4 pt-4 border-t border-slate-200 hidden">
+                    <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass text-emerald-600"></i> Kebutuhan Skill
+                    </h4>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Skill Yang Sedang Dicari</label>
+                        <input type="text" id="reg-seeker-needed" placeholder="Contoh: Tutor Pemrograman / Pembuat Website" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Deskripsi Kebutuhan</label>
+                        <textarea id="reg-seeker-desc" rows="3" placeholder="Jelaskan kebutuhan proyek atau pekerjaan yang sedang Anda cari..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 transition mt-4">
+                    Selesaikan Pendaftaran
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT PROFILE / ADD SKILL (FOR DASHBOARD) -->
+    <div id="modal-add-skill" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl relative">
+            <button onclick="closeModal('modal-add-skill')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h2 class="text-2xl font-bold text-slate-900 mb-4" id="modal-skill-title">Tambah Skill Baru</h2>
+            <form onsubmit="handleSaveSkill(event)" class="space-y-4">
+                <input type="hidden" id="edit-skill-id">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Nama Skill</label>
+                    <input type="text" id="user-skill-title" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Kategori</label>
+                    <select id="user-skill-cat" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"></select>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Pengalaman (Tahun)</label>
+                        <input type="number" id="user-skill-exp" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Tarif</label>
+                        <input type="text" id="user-skill-price" placeholder="Mulai Rp50.000" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Deskripsi Skill</label>
+                    <textarea id="user-skill-desc" rows="3" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Portofolio Link</label>
+                    <input type="url" id="user-skill-portfolio" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm">
+                </div>
+                <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition">Simpan Skill</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL ADMIN: ADD CATEGORY -->
+    <div id="modal-add-category" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl relative">
+            <button onclick="closeModal('modal-add-category')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Tambah Kategori Baru</h3>
+            <form onsubmit="handleAddCategory(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Nama Kategori</label>
+                    <input type="text" id="admin-cat-name" required placeholder="Contoh: Otomotif" class="w-full px-4 py-2 rounded-xl border border-slate-300 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Class FontAwesome Icon</label>
+                    <input type="text" id="admin-cat-icon" placeholder="fa-wrench" class="w-full px-4 py-2 rounded-xl border border-slate-300 text-sm">
+                </div>
+                <button type="submit" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl">Tambah Kategori</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ================================================================= -->
+    <!-- JAVASCRIPT APP CORE ENGINE -->
+    <!-- ================================================================= -->
+    <script>
+        // =======================================================
+        // DATA INITIALIZATION & DUMMY DATA
+        // =======================================================
+        const DEFAULT_CATEGORIES = [
+            { id: 'cat-1', name: 'Desain Grafis', icon: 'fa-palette' },
+            { id: 'cat-2', name: 'Fotografi', icon: 'fa-camera' },
+            { id: 'cat-3', name: 'Video Editing', icon: 'fa-video' },
+            { id: 'cat-4', name: 'Programming', icon: 'fa-code' },
+            { id: 'cat-5', name: 'Pendidikan', icon: 'fa-graduation-cap' },
+            { id: 'cat-6', name: 'Memasak', icon: 'fa-utensils' },
+            { id: 'cat-7', name: 'Makeup', icon: 'fa-wand-magic-sparkles' },
+            { id: 'cat-8', name: 'Menjahit', icon: 'fa-scissors' },
+            { id: 'cat-9', name: 'Musik', icon: 'fa-music' },
+            { id: 'cat-10', name: 'Bahasa', icon: 'fa-language' },
+            { id: 'cat-11', name: 'Servis/Perbaikan', icon: 'fa-wrench' },
+            { id: 'cat-12', name: 'Lainnya', icon: 'fa-ellipsis' },
+        ];
+
+        const DUMMY_USERS = [
+            {
+                id: 'usr-1',
+                name: 'Aulia',
+                email: 'aulia@snaps.com',
+                phone: '081234567890',
+                password: '123',
+                role: 'provider',
+                location: 'Bangkalan',
+                avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+                status: 'active',
+                favorites: []
+            },
+            {
+                id: 'usr-2',
+                name: 'Rizky',
+                email: 'rizky@snaps.com',
+                phone: '082198765432',
+                password: '123',
+                role: 'provider',
+                location: 'Surabaya',
+                avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+                status: 'active',
+                favorites: []
+            },
+            {
+                id: 'usr-3',
+                name: 'Sinta',
+                email: 'sinta@snaps.com',
+                phone: '085711223344',
+                password: '123',
+                role: 'provider',
+                location: 'Bangkalan',
+                avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150',
+                status: 'active',
+                favorites: []
+            },
+            {
+                id: 'usr-4',
+                name: 'Fajar',
+                email: 'fajar@snaps.com',
+                phone: '088199887766',
+                password: '123',
+                role: 'provider',
+                location: 'Pamekasan',
+                avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
+                status: 'active',
+                favorites: []
+            },
+            {
+                id: 'usr-5',
+                name: 'Budi Santoso',
+                email: 'budi@snaps.com',
+                phone: '081333444555',
+                password: '123',
+                role: 'seeker',
+                location: 'Sampang',
+                avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+                status: 'active',
+                neededSkill: 'Website UMKM',
+                neededDesc: 'Membutuhkan pengembang web untuk membuat landing page toko kelontong.',
+                favorites: ['skl-1', 'skl-2']
+            }
+        ];
+
+        const DUMMY_SKILLS = [
+            {
+                id: 'skl-1',
+                userId: 'usr-1',
+                name: 'Desain Grafis & Banner',
+                category: 'Desain Grafis',
+                price: 'Mulai Rp50.000',
+                experience: 2,
+                description: 'Menerima pembuatan desain logo, poster acara, konten feeds Instagram, dan banner promosi bisnis dengan pengerjaan cepat.',
+                portfolio: 'https://behance.net',
+                createdAt: '2026-01-10'
+            },
+            {
+                id: 'skl-2',
+                userId: 'usr-2',
+                name: 'Fotografi Wisuda & Acara',
+                category: 'Fotografi',
+                price: 'Rp100.000',
+                experience: 3,
+                description: 'Jasa foto wisuda, foto produk UMKM, dan event indoor/outdoor include file editan berkualitas tinggi.',
+                portfolio: 'https://instagram.com',
+                createdAt: '2026-01-12'
+            },
+            {
+                id: 'skl-3',
+                userId: 'usr-3',
+                name: 'Mengajar Matematika & IPA',
+                category: 'Pendidikan',
+                price: 'Rp40.000/jam',
+                experience: 1,
+                description: 'Bimbingan belajar matematika & sains untuk jenjang SD - SMA secara offline (daerah Bangkalan) maupun online.',
+                portfolio: '',
+                createdAt: '2026-02-01'
+            },
+            {
+                id: 'skl-4',
+                userId: 'usr-4',
+                name: 'Video Editing TikTok & Reels',
+                category: 'Video Editing',
+                price: 'Rp75.000',
+                experience: 2,
+                description: 'Editing video pendek bertema cinematic, konten edukasi, hingga iklan komersial dengan efek menarik & audio jernih.',
+                portfolio: 'https://tiktok.com',
+                createdAt: '2026-02-15'
+            }
+        ];
+
+        // LOCALSTORAGE MANAGEMENT
+        function getStorage(key, defaultVal) {
+            const data = localStorage.getItem('snaps_' + key);
+            return data ? JSON.parse(data) : defaultVal;
+        }
+
+        function setStorage(key, val) {
+            localStorage.setItem('snaps_' + key, JSON.stringify(val));
+        }
+
+        function initLocalStorage() {
+            if (!localStorage.getItem('snaps_users')) setStorage('users', DUMMY_USERS);
+            if (!localStorage.getItem('snaps_skills')) setStorage('skills', DUMMY_SKILLS);
+            if (!localStorage.getItem('snaps_categories')) setStorage('categories', DEFAULT_CATEGORIES);
+        }
+
+        // STATE MANAGEMENT
+        let currentUser = getStorage('currentUser', null);
+
+        // =======================================================
+        // NAVIGATION ENGINE
+        // =======================================================
+        function navigateTo(pageId, param = null) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            const target = document.getElementById('page-' + pageId);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Close mobile menu
+            document.getElementById('mobile-menu').classList.add('hidden');
+
+            // Page specific render triggers
+            if (pageId === 'home') renderHomePage();
+            if (pageId === 'search') renderSearchPage(param);
+            if (pageId === 'detail') renderDetailPage(param);
+            if (pageId === 'dashboard-user') renderUserDashboard();
+            if (pageId === 'dashboard-admin') renderAdminDashboard();
+            if (pageId === 'categories') renderCategoriesPage();
+
+            renderNavbar();
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // =======================================================
+        // NAVBAR RENDERER
+        // =======================================================
+        function renderNavbar() {
+            const navAuth = document.getElementById('nav-auth-section');
+            const mobileAuth = document.getElementById('mobile-auth-section');
+
+            if (currentUser) {
+                if (currentUser.role === 'admin') {
+                    navAuth.innerHTML = `
+                        <button onclick="navigateTo('dashboard-admin')" class="px-3.5 py-2 bg-red-100 hover:bg-red-200 text-red-700 font-bold text-xs rounded-xl transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-shield"></i> Dashboard Admin
+                        </button>
+                    `;
+                    mobileAuth.innerHTML = `<button onclick="navigateTo('dashboard-admin')" class="block w-full text-left font-bold text-red-600">Dashboard Admin</button>`;
+                } else {
+                    navAuth.innerHTML = `
+                        <button onclick="navigateTo('dashboard-user')" class="flex items-center space-x-2 p-1.5 rounded-full hover:bg-slate-100 transition border border-slate-200">
+                            <img src="${currentUser.avatar || 'https://via.placeholder.com/100'}" class="w-8 h-8 rounded-full object-cover">
+                            <span class="text-sm font-semibold text-slate-800 pr-2">${currentUser.name}</span>
+                        </button>
+                    `;
+                    mobileAuth.innerHTML = `<button onclick="navigateTo('dashboard-user')" class="block w-full text-left font-bold text-indigo-600">Dashboard Saya (${currentUser.name})</button>`;
+                }
+            } else {
+                navAuth.innerHTML = `
+                    <button onclick="openModal('modal-login')" class="text-sm font-semibold text-slate-700 hover:text-indigo-600 px-3 py-2">Masuk</button>
+                    <button onclick="openRegisterRoleModal()" class="text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-xl transition shadow-md shadow-indigo-200">Daftar</button>
+                `;
+                mobileAuth.innerHTML = `
+                    <button onclick="openModal('modal-login')" class="block w-full text-left text-slate-700 py-1 font-semibold">Masuk</button>
+                    <button onclick="openRegisterRoleModal()" class="block w-full text-left text-indigo-600 py-1 font-bold">Daftar Akun Baru</button>
+                `;
+            }
+        }
+
+        // =======================================================
+        // PAGE 1: HOME PAGE RENDERER
+        // =======================================================
+        function renderHomePage() {
+            const users = getStorage('users', []);
+            const skills = getStorage('skills', []);
+            const categories = getStorage('categories', []);
+
+            // Stats
+            document.getElementById('stat-total-users-home').innerText = users.length;
+            document.getElementById('stat-total-skills-home').innerText = skills.length;
+            document.getElementById('stat-total-categories-home').innerText = categories.length;
+
+            // Categories Grid
+            const catGrid = document.getElementById('home-categories-grid');
+            catGrid.innerHTML = categories.slice(0, 6).map(cat => `
+                <div onclick="navigateTo('search', { category: '${cat.name}' })" class="bg-white p-4 rounded-2xl border border-slate-200 hover:border-indigo-500 hover:shadow-lg transition text-center cursor-pointer group">
+                    <div class="w-12 h-12 bg-indigo-50 group-hover:bg-indigo-600 group-hover:text-white text-indigo-600 rounded-xl flex items-center justify-center mx-auto text-xl transition mb-2">
+                        <i class="fa-solid ${cat.icon || 'fa-tag'}"></i>
+                    </div>
+                    <span class="text-xs font-bold text-slate-700 group-hover:text-indigo-600 block">${cat.name}</span>
+                </div>
+            `).join('');
+
+            // Featured Skills Grid
+            const featGrid = document.getElementById('home-featured-skills');
+            const activeSkills = skills.slice(0, 4);
+
+            featGrid.innerHTML = activeSkills.map(skill => {
+                const owner = users.find(u => u.id === skill.userId) || { name: 'Anonim', location: '-', avatar: '' };
+                return createSkillCardHTML(skill, owner);
+            }).join('');
+        }
+
+        function handleHeroSearch(e) {
+            e.preventDefault();
+            const keyword = document.getElementById('hero-search-input').value.trim();
+            navigateTo('search', { keyword: keyword });
+        }
+
+        // =======================================================
+        // PAGE 2: SEARCH & FILTER PAGE RENDERER
+        // =======================================================
+        function renderSearchPage(params = null) {
+            const categories = getStorage('categories', []);
+            const users = getStorage('users', []);
+
+            // Populate Filter Dropdowns
+            const catSelect = document.getElementById('filter-category');
+            catSelect.innerHTML = `<option value="">Semua Kategori</option>` + 
+                categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+
+            // Populate Unique Locations
+            const locations = [...new Set(users.map(u => u.location).filter(Boolean))];
+            const locSelect = document.getElementById('filter-location');
+            locSelect.innerHTML = `<option value="">Semua Domisili</option>` + 
+                locations.map(l => `<option value="${l}">${l}</option>`).join('');
+
+            // Apply url/params if passed
+            if (params) {
+                if (params.category) catSelect.value = params.category;
+                if (params.keyword) document.getElementById('search-keyword-input').value = params.keyword;
+            }
+
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const keyword = document.getElementById('search-keyword-input').value.toLowerCase();
+            const category = document.getElementById('filter-category').value;
+            const location = document.getElementById('filter-location').value;
+            const minExp = parseInt(document.getElementById('filter-experience').value) || 0;
+
+            const skills = getStorage('skills', []);
+            const users = getStorage('users', []);
+
+            const filtered = skills.filter(skill => {
+                const owner = users.find(u => u.id === skill.userId);
+                if (!owner || owner.status === 'inactive') return false;
+
+                const matchKeyword = !keyword || 
+                    skill.name.toLowerCase().includes(keyword) || 
+                    skill.description.toLowerCase().includes(keyword) ||
+                    owner.name.toLowerCase().includes(keyword);
+
+                const matchCat = !category || skill.category === category;
+                const matchLoc = !location || owner.location === location;
+                const matchExp = skill.experience >= minExp;
+
+                return matchKeyword && matchCat && matchLoc && matchExp;
+            });
+
+            document.getElementById('search-result-count').innerText = filtered.length;
+            const grid = document.getElementById('search-cards-grid');
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-400">
+                        <i class="fa-solid fa-folder-open text-5xl mb-3 text-slate-300"></i>
+                        <p class="text-base font-semibold">Tidak ada skill yang cocok dengan filter Anda.</p>
+                        <button onclick="resetFilters()" class="mt-3 text-indigo-600 font-bold hover:underline text-sm">Reset Filter</button>
+                    </div>
+                `;
+            } else {
+                grid.innerHTML = filtered.map(skill => {
+                    const owner = users.find(u => u.id === skill.userId);
+                    return createSkillCardHTML(skill, owner);
+                }).join('');
+            }
+        }
+
+        function resetFilters() {
+            document.getElementById('search-keyword-input').value = '';
+            document.getElementById('filter-category').value = '';
+            document.getElementById('filter-location').value = '';
+            document.getElementById('filter-experience').value = '0';
+            applyFilters();
+        }
+
+        function createSkillCardHTML(skill, owner) {
+            const isFav = currentUser && currentUser.favorites && currentUser.favorites.includes(skill.id);
+
+            return `
+                <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl transition duration-300 flex flex-col justify-between">
+                    <div class="p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <img src="${owner.avatar || 'https://via.placeholder.com/100'}" class="w-12 h-12 rounded-full object-cover border border-slate-200">
+                                <div>
+                                    <h4 class="font-bold text-slate-900 text-sm">${owner.name}</h4>
+                                    <p class="text-xs text-slate-500"><i class="fa-solid fa-location-dot text-red-500 mr-1"></i>${owner.location || 'Indonesia'}</p>
+                                </div>
+                            </div>
+                            <button onclick="toggleFavorite('${skill.id}')" class="text-slate-300 hover:text-red-500 text-lg transition">
+                                <i class="fa-${isFav ? 'solid text-red-500' : 'regular'} fa-heart"></i>
+                            </button>
+                        </div>
+
+                        <span class="inline-block px-2.5 py-1 bg-indigo-50 text-indigo-700 font-semibold text-[11px] rounded-lg mb-2">${skill.category}</span>
+                        <h3 class="font-extrabold text-slate-800 text-base mb-2 line-clamp-1">${skill.name}</h3>
+                        <p class="text-xs text-slate-600 line-clamp-2 mb-4 leading-relaxed">${skill.description}</p>
+
+                        <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs">
+                            <span class="text-slate-500"><i class="fa-solid fa-clock text-amber-500 mr-1"></i>${skill.experience} thn exp</span>
+                            <span class="font-extrabold text-indigo-600">${skill.price || 'Gratis / Nego'}</span>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-slate-50 border-t border-slate-100">
+                        <button onclick="navigateTo('detail', '${skill.id}')" class="w-full py-2.5 bg-white hover:bg-indigo-600 text-indigo-600 hover:text-white font-bold text-xs rounded-xl border border-indigo-200 hover:border-indigo-600 transition shadow-sm">
+                            Lihat Profil & Skill
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // =======================================================
+        // PAGE 3: DETAIL PROFIL PEMILIK SKILL
+        // =======================================================
+        function renderDetailPage(skillId) {
+            const skills = getStorage('skills', []);
+            const users = getStorage('users', []);
+            const skill = skills.find(s => s.id === skillId);
+
+            if (!skill) {
+                document.getElementById('detail-profile-container').innerHTML = `<div class="p-8 text-center text-slate-500">Skill tidak ditemukan.</div>`;
+                return;
+            }
+
+            const owner = users.find(u => u.id === skill.userId) || {};
+            const cleanPhone = owner.phone ? owner.phone.replace(/[^0-9]/g, '') : '';
+            const waPhone = cleanPhone.startsWith('0') ? '62' + cleanPhone.slice(1) : cleanPhone;
+            const waMessage = encodeURIComponent(`Halo ${owner.name}, saya menemukan profil Anda di SNAPS dan tertarik dengan skill "${skill.name}" yang Anda tawarkan.`);
+            const waUrl = `https://wa.me/${waPhone}?text=${waMessage}`;
+
+            document.getElementById('detail-profile-container').innerHTML = `
+                <!-- Banner & Profile Header -->
+                <div class="bg-gradient-to-r from-indigo-600 to-violet-700 h-36"></div>
+                <div class="px-6 pb-6 relative">
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between -mt-16 mb-6 gap-4">
+                        <div class="flex items-end gap-4">
+                            <img src="${owner.avatar || 'https://via.placeholder.com/150'}" class="w-28 h-28 rounded-2xl object-cover border-4 border-white shadow-md bg-white">
+                            <div class="mb-1">
+                                <h2 class="text-2xl font-black text-slate-900">${owner.name}</h2>
+                                <p class="text-sm font-semibold text-slate-500"><i class="fa-solid fa-location-dot text-red-500 mr-1"></i>${owner.location} &bull; <span class="text-indigo-600">${skill.category}</span></p>
+                            </div>
+                        </div>
+
+                        <a href="${waUrl}" target="_blank" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl shadow-lg shadow-emerald-200 transition flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-brands fa-whatsapp text-lg"></i> Hubungi via WhatsApp
+                        </a>
+                    </div>
+
+                    <!-- Details Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-slate-100">
+                        <div class="md:col-span-2 space-y-6">
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-base mb-2">Tentang Skill (${skill.name})</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line">${skill.description}</p>
+                            </div>
+
+                            ${skill.portfolio ? `
+                                <div>
+                                    <h3 class="font-bold text-slate-900 text-base mb-2">Portofolio Pekerjaan</h3>
+                                    <a href="${skill.portfolio}" target="_blank" class="inline-flex items-center gap-2 text-sm text-indigo-600 hover:underline font-semibold bg-indigo-50 px-4 py-2 rounded-xl">
+                                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Link Portofolio
+                                    </a>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <!-- Sidebar Summary -->
+                        <div class="bg-slate-50 p-5 rounded-2xl space-y-4 h-fit">
+                            <div>
+                                <span class="text-xs uppercase font-bold text-slate-400">Tarif / Biaya Jasa</span>
+                                <p class="text-xl font-black text-indigo-600 mt-0.5">${skill.price || 'Sesuai Kesepakatan'}</p>
+                            </div>
+                            <div>
+                                <span class="text-xs uppercase font-bold text-slate-400">Pengalaman Kerja</span>
+                                <p class="text-sm font-bold text-slate-700 mt-0.5">${skill.experience} Tahun</p>
+                            </div>
+                            <div>
+                                <span class="text-xs uppercase font-bold text-slate-400">Status Akun</span>
+                                <p class="text-xs font-bold text-emerald-600 mt-0.5 flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-check"></i> Terverifikasi Aktif
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // =======================================================
+        // PAGE 4: DASHBOARD USER RENDERER
+        // =======================================================
+        function renderUserDashboard() {
+            if (!currentUser) return navigateTo('home');
+
+            document.getElementById('dash-user-welcome').innerText = `Halo, ${currentUser.name}!`;
+            const container = document.getElementById('dashboard-user-content');
+
+            if (currentUser.role === 'provider') {
+                // RENDER PROVIDER DASHBOARD
+                const skills = getStorage('skills', []).filter(s => s.userId === currentUser.id);
+
+                container.innerHTML = `
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Profile Card -->
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-fit">
+                            <div class="text-center mb-6">
+                                <img src="${currentUser.avatar || 'https://via.placeholder.com/150'}" class="w-24 h-24 rounded-full object-cover mx-auto mb-3 border-2 border-indigo-200">
+                                <h3 class="font-black text-slate-900 text-lg">${currentUser.name}</h3>
+                                <p class="text-xs text-slate-500">${currentUser.email} &bull; ${currentUser.phone}</p>
+                                <span class="inline-block mt-2 px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full">Pemilik Skill</span>
+                            </div>
+                            <div class="space-y-3 text-xs border-t border-slate-100 pt-4 text-slate-600">
+                                <div class="flex justify-between"><span>Domisili:</span> <strong class="text-slate-800">${currentUser.location}</strong></div>
+                                <div class="flex justify-between"><span>Total Skill:</span> <strong class="text-slate-800">${skills.length}</strong></div>
+                            </div>
+                        </div>
+
+                        <!-- Skills Management -->
+                        <div class="lg:col-span-2 space-y-6">
+                            <div class="flex justify-between items-center bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                                <div>
+                                    <h3 class="font-bold text-slate-800">Daftar Skill Anda</h3>
+                                    <p class="text-xs text-slate-500">Skill ini akan tampil di halaman pencarian publik</p>
+                                </div>
+                                <button onclick="openSkillModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-plus"></i> Tambah Skill
+                                </button>
+                            </div>
+
+                            <div class="space-y-4">
+                                ${skills.length === 0 ? `
+                                    <div class="p-8 bg-white rounded-2xl border border-slate-200 text-center text-slate-400">
+                                        Belum ada skill yang ditambahkan. Klik tombol "Tambah Skill" untuk memulai.
+                                    </div>
+                                ` : skills.map(skill => `
+                                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                        <div>
+                                            <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">${skill.category}</span>
+                                            <h4 class="font-bold text-slate-900 text-base mt-1">${skill.name}</h4>
+                                            <p class="text-xs text-slate-500 mt-0.5">${skill.price} &bull; Exp: ${skill.experience} thn</p>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <button onclick="navigateTo('detail', '${skill.id}')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg">Pratinjau</button>
+                                            <button onclick="openSkillModal('${skill.id}')" class="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-bold rounded-lg">Edit</button>
+                                            <button onclick="deleteSkill('${skill.id}')" class="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold rounded-lg">Hapus</button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // RENDER SEEKER DASHBOARD
+                const allSkills = getStorage('skills', []);
+                const favSkills = allSkills.filter(s => currentUser.favorites && currentUser.favorites.includes(s.id));
+                const users = getStorage('users', []);
+
+                container.innerHTML = `
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-fit">
+                            <div class="text-center mb-6">
+                                <img src="${currentUser.avatar || 'https://via.placeholder.com/150'}" class="w-24 h-24 rounded-full object-cover mx-auto mb-3 border-2 border-emerald-200">
+                                <h3 class="font-black text-slate-900 text-lg">${currentUser.name}</h3>
+                                <p class="text-xs text-slate-500">${currentUser.email}</p>
+                                <span class="inline-block mt-2 px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full">Pencari Skill</span>
+                            </div>
+                            <div class="space-y-3 text-xs border-t border-slate-100 pt-4 text-slate-600">
+                                <div class="flex justify-between"><span>Skill Dicari:</span> <strong class="text-slate-800">${currentUser.neededSkill || '-'}</strong></div>
+                                <div class="flex justify-between"><span>Domisili:</span> <strong class="text-slate-800">${currentUser.location}</strong></div>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-2 space-y-6">
+                            <h3 class="font-bold text-slate-800 text-lg">Skill Favorit Disimpan (${favSkills.length})</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                ${favSkills.length === 0 ? `
+                                    <div class="col-span-full p-8 bg-white rounded-2xl border border-slate-200 text-center text-slate-400">
+                                        Belum ada skill favorit tersimpan. Tekan ikon hati pada kartu skill untuk menyimpan favorit.
+                                    </div>
+                                ` : favSkills.map(skill => {
+                                    const owner = users.find(u => u.id === skill.userId) || {};
+                                    return createSkillCardHTML(skill, owner);
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // =======================================================
+        // PAGE 5: DASHBOARD ADMIN RENDERER
+        // =======================================================
+        function renderAdminDashboard() {
+            if (!currentUser || currentUser.role !== 'admin') return navigateTo('home');
+
+            const users = getStorage('users', []);
+            const skills = getStorage('skills', []);
+            const categories = getStorage('categories', []);
+
+            // Quick Stats
+            document.getElementById('admin-stat-users').innerText = users.length;
+            document.getElementById('admin-stat-providers').innerText = users.filter(u => u.role === 'provider').length;
+            document.getElementById('admin-stat-seekers').innerText = users.filter(u => u.role === 'seeker').length;
+            document.getElementById('admin-stat-skills').innerText = skills.length;
+            document.getElementById('admin-stat-categories').innerText = categories.length;
+
+            // Render Admin Users Table
+            const usersTbody = document.getElementById('admin-users-table-body');
+            usersTbody.innerHTML = users.map(user => `
+                <tr class="border-b border-slate-100 hover:bg-slate-50 transition">
+                    <td class="p-4 flex items-center gap-3">
+                        <img src="${user.avatar || 'https://via.placeholder.com/100'}" class="w-8 h-8 rounded-full object-cover">
+                        <div>
+                            <div class="font-bold text-slate-800">${user.name}</div>
+                            <div class="text-xs text-slate-400">${user.email}</div>
+                        </div>
+                    </td>
+                    <td class="p-4">
+                        <span class="px-2 py-0.5 text-[10px] font-bold uppercase rounded ${user.role === 'provider' ? 'bg-indigo-100 text-indigo-700' : 'bg-emerald-100 text-emerald-700'}">
+                            ${user.role}
+                        </span>
+                    </td>
+                    <td class="p-4 text-xs">${user.location || '-'}</td>
+                    <td class="p-4 text-xs font-mono">${user.phone}</td>
+                    <td class="p-4">
+                        <span class="px-2 py-0.5 text-[10px] font-bold rounded ${user.status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}">
+                            ${user.status || 'active'}
+                        </span>
+                    </td>
+                    <td class="p-4 text-center">
+                        <button onclick="toggleUserStatus('${user.id}')" class="text-xs px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded mr-1">
+                            ${user.status === 'active' ? 'Nonaktifkan' : 'Aktifkan'}
+                        </button>
+                        <button onclick="deleteUser('${user.id}')" class="text-xs px-2 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded">Hapus</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Render Admin Skills Table
+            const skillsTbody = document.getElementById('admin-skills-table-body');
+            skillsTbody.innerHTML = skills.map(skill => {
+                const owner = users.find(u => u.id === skill.userId) || { name: 'Dihapus' };
+                return `
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition">
+                        <td class="p-4 font-semibold text-slate-800">${owner.name}</td>
+                        <td class="p-4 font-bold text-indigo-600">${skill.name}</td>
+                        <td class="p-4 text-xs">${skill.category}</td>
+                        <td class="p-4 text-xs font-semibold">${skill.price}</td>
+                        <td class="p-4 text-xs">${skill.experience} Thn</td>
+                        <td class="p-4 text-center">
+                            <button onclick="deleteSkill('${skill.id}')" class="text-xs px-2 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded">Hapus</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Render Admin Categories Table
+            const catTbody = document.getElementById('admin-categories-table-body');
+            catTbody.innerHTML = categories.map(cat => `
+                <tr class="border-b border-slate-100 hover:bg-slate-50 transition">
+                    <td class="p-4 text-center text-indigo-600"><i class="fa-solid ${cat.icon || 'fa-tag'} text-lg"></i></td>
+                    <td class="p-4 font-bold text-slate-800">${cat.name}</td>
+                    <td class="p-4 text-center">
+                        <button onclick="deleteCategory('${cat.id}')" class="text-xs px-2 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded">Hapus</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function switchAdminTab(tabName) {
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+                btn.classList.remove('border-indigo-600', 'text-indigo-600');
+                btn.classList.add('border-transparent', 'text-slate-500');
+            });
+
+            document.getElementById('admin-tab-' + tabName).classList.remove('hidden');
+            const activeBtn = document.getElementById('tab-btn-' + tabName);
+            activeBtn.classList.remove('border-transparent', 'text-slate-500');
+            activeBtn.classList.add('border-indigo-600', 'text-indigo-600');
+        }
+
+        // =======================================================
+        // OTHER PAGES
+        // =======================================================
+        function renderCategoriesPage() {
+            const categories = getStorage('categories', []);
+            const container = document.getElementById('full-categories-grid');
+            container.innerHTML = categories.map(cat => `
+                <div onclick="navigateTo('search', { category: '${cat.name}' })" class="bg-white p-6 rounded-2xl border border-slate-200 hover:border-indigo-500 hover:shadow-xl transition text-center cursor-pointer group">
+                    <div class="w-16 h-16 bg-indigo-50 group-hover:bg-indigo-600 group-hover:text-white text-indigo-600 rounded-2xl flex items-center justify-center mx-auto text-2xl transition mb-3">
+                        <i class="fa-solid ${cat.icon || 'fa-tag'}"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-800 group-hover:text-indigo-600 text-sm">${cat.name}</h4>
+                </div>
+            `).join('');
+        }
+
+        // =======================================================
+        // AUTHENTICATION & HANDLERS
+        // =======================================================
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function openRegisterRoleModal(role = null) {
+            if (role) {
+                proceedRegistration(role);
+            } else {
+                openModal('modal-role-select');
+            }
+        }
+
+        function proceedRegistration(role) {
+            closeModal('modal-role-select');
+            document.getElementById('reg-role').value = role;
+
+            const categories = getStorage('categories', []);
+            const catSelect = document.getElementById('reg-skill-category');
+            catSelect.innerHTML = categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+
+            if (role === 'provider') {
+                document.getElementById('reg-form-role-badge').innerText = 'Pemilik Skill';
+                document.getElementById('reg-form-title').innerText = 'Daftarkan Skill Anda';
+                document.getElementById('provider-fields').classList.remove('hidden');
+                document.getElementById('seeker-fields').classList.add('hidden');
+            } else {
+                document.getElementById('reg-form-role-badge').innerText = 'Pencari Skill';
+                document.getElementById('reg-form-title').innerText = 'Pendaftaran Pencari Skill';
+                document.getElementById('provider-fields').classList.add('hidden');
+                document.getElementById('seeker-fields').classList.remove('hidden');
+            }
+
+            openModal('modal-register-form');
+        }
+
+        function handleRegisterSubmit(e) {
+            e.preventDefault();
+            const role = document.getElementById('reg-role').value;
+            const users = getStorage('users', []);
+            const email = document.getElementById('reg-email').value.trim();
+
+            if (users.some(u => u.email === email)) {
+                showToast('Email sudah terdaftar!', 'error');
+                return;
+            }
+
+            const newUser = {
+                id: 'usr-' + Date.now(),
+                name: document.getElementById('reg-name').value.trim(),
+                email: email,
+                phone: document.getElementById('reg-phone').value.trim(),
+                password: document.getElementById('reg-password').value,
+                location: document.getElementById('reg-location').value.trim(),
+                avatar: document.getElementById('reg-avatar').value.trim() || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
+                role: role,
+                status: 'active',
+                favorites: []
+            };
+
+            if (role === 'seeker') {
+                newUser.neededSkill = document.getElementById('reg-seeker-needed').value.trim();
+                newUser.neededDesc = document.getElementById('reg-seeker-desc').value.trim();
+            }
+
+            users.push(newUser);
+            setStorage('users', users);
+
+            // If provider, create skill entry
+            if (role === 'provider') {
+                const skills = getStorage('skills', []);
+                const newSkill = {
+                    id: 'skl-' + Date.now(),
+                    userId: newUser.id,
+                    name: document.getElementById('reg-skill-name').value.trim(),
+                    category: document.getElementById('reg-skill-category').value,
+                    price: document.getElementById('reg-skill-price').value.trim() || 'Sesuai Kesepakatan',
+                    experience: parseInt(document.getElementById('reg-skill-exp').value) || 0,
+                    description: document.getElementById('reg-skill-desc').value.trim(),
+                    portfolio: document.getElementById('reg-skill-portfolio').value.trim(),
+                    createdAt: new Date().toISOString().split('T')[0]
+                };
+                skills.push(newSkill);
+                setStorage('skills', skills);
+            }
+
+            currentUser = newUser;
+            setStorage('currentUser', currentUser);
+
+            closeModal('modal-register-form');
+            showToast('Pendaftaran Berhasil! Selamat Datang di SNAPS.', 'success');
+            navigateTo('dashboard-user');
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            // Admin Login Check
+            if (email === 'admin@snaps.com' && password === 'admin123') {
+                currentUser = { id: 'admin-1', name: 'Administrator', role: 'admin' };
+                setStorage('currentUser', currentUser);
+                closeModal('modal-login');
+                showToast('Login sebagai Admin Berhasil', 'success');
+                navigateTo('dashboard-admin');
+                return;
+            }
+
+            const users = getStorage('users', []);
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                if (user.status === 'inactive') {
+                    showToast('Akun Anda dinonaktifkan oleh Admin.', 'error');
+                    return;
+                }
+                currentUser = user;
+                setStorage('currentUser', currentUser);
+                closeModal('modal-login');
+                showToast('Berhasil Masuk!', 'success');
+                navigateTo('dashboard-user');
+            } else {
+                showToast('Email atau Password salah!', 'error');
+            }
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('snaps_currentUser');
+            showToast('Anda telah keluar.', 'info');
+            navigateTo('home');
+        }
+
+        // =======================================================
+        // CRUD SKILL / USER / CATEGORY ACTIONS
+        // =======================================================
+        function openSkillModal(skillId = null) {
+            const categories = getStorage('categories', []);
+            const catSelect = document.getElementById('user-skill-cat');
+            catSelect.innerHTML = categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+
+            if (skillId) {
+                const skills = getStorage('skills', []);
+                const skill = skills.find(s => s.id === skillId);
+                if (skill) {
+                    document.getElementById('modal-skill-title').innerText = 'Edit Skill';
+                    document.getElementById('edit-skill-id').value = skill.id;
+                    document.getElementById('user-skill-title').value = skill.name;
+                    document.getElementById('user-skill-cat').value = skill.category;
+                    document.getElementById('user-skill-exp').value = skill.experience;
+                    document.getElementById('user-skill-price').value = skill.price;
+                    document.getElementById('user-skill-desc').value = skill.description;
+                    document.getElementById('user-skill-portfolio').value = skill.portfolio || '';
+                }
+            } else {
+                document.getElementById('modal-skill-title').innerText = 'Tambah Skill Baru';
+                document.getElementById('edit-skill-id').value = '';
+                document.getElementById('user-skill-title').value = '';
+                document.getElementById('user-skill-exp').value = '';
+                document.getElementById('user-skill-price').value = '';
+                document.getElementById('user-skill-desc').value = '';
+                document.getElementById('user-skill-portfolio').value = '';
+            }
+
+            openModal('modal-add-skill');
+        }
+
+        function handleSaveSkill(e) {
+            e.preventDefault();
+            const skills = getStorage('skills', []);
+            const skillId = document.getElementById('edit-skill-id').value;
+
+            if (skillId) {
+                // Update
+                const idx = skills.findIndex(s => s.id === skillId);
+                if (idx !== -1) {
+                    skills[idx].name = document.getElementById('user-skill-title').value;
+                    skills[idx].category = document.getElementById('user-skill-cat').value;
+                    skills[idx].experience = parseInt(document.getElementById('user-skill-exp').value) || 0;
+                    skills[idx].price = document.getElementById('user-skill-price').value;
+                    skills[idx].description = document.getElementById('user-skill-desc').value;
+                    skills[idx].portfolio = document.getElementById('user-skill-portfolio').value;
+                }
+            } else {
+                // Create
+                const newSkill = {
+                    id: 'skl-' + Date.now(),
+                    userId: currentUser.id,
+                    name: document.getElementById('user-skill-title').value,
+                    category: document.getElementById('user-skill-cat').value,
+                    experience: parseInt(document.getElementById('user-skill-exp').value) || 0,
+                    price: document.getElementById('user-skill-price').value || 'Sesuai Kesepakatan',
+                    description: document.getElementById('user-skill-desc').value,
+                    portfolio: document.getElementById('user-skill-portfolio').value,
+                    createdAt: new Date().toISOString().split('T')[0]
+                };
+                skills.push(newSkill);
+            }
+
+            setStorage('skills', skills);
+            closeModal('modal-add-skill');
+            showToast('Skill berhasil disimpan!', 'success');
+            renderUserDashboard();
+        }
+
+        function deleteSkill(skillId) {
+            if (confirm('Apakah Anda yakin ingin menghapus skill ini?')) {
+                let skills = getStorage('skills', []);
+                skills = skills.filter(s => s.id !== skillId);
+                setStorage('skills', skills);
+                showToast('Skill berhasil dihapus.', 'info');
+                if (currentUser.role === 'admin') renderAdminDashboard();
+                else renderUserDashboard();
+            }
+        }
+
+        function toggleFavorite(skillId) {
+            if (!currentUser) {
+                openModal('modal-login');
+                return;
+            }
+
+            let users = getStorage('users', []);
+            const uIdx = users.findIndex(u => u.id === currentUser.id);
+            if (uIdx !== -1) {
+                if (!users[uIdx].favorites) users[uIdx].favorites = [];
+                const favIdx = users[uIdx].favorites.indexOf(skillId);
+
+                if (favIdx !== -1) {
+                    users[uIdx].favorites.splice(favIdx, 1);
+                    showToast('Dihapus dari favorit', 'info');
+                } else {
+                    users[uIdx].favorites.push(skillId);
+                    showToast('Ditambahkan ke favorit!', 'success');
+                }
+
+                currentUser = users[uIdx];
+                setStorage('currentUser', currentUser);
+                setStorage('users', users);
+                applyFilters();
+            }
+        }
+
+        // Admin User Actions
+        function toggleUserStatus(userId) {
+            let users = getStorage('users', []);
+            const idx = users.findIndex(u => u.id === userId);
+            if (idx !== -1) {
+                users[idx].status = users[idx].status === 'active' ? 'inactive' : 'active';
+                setStorage('users', users);
+                renderAdminDashboard();
+                showToast('Status pengguna diperbarui', 'success');
+            }
+        }
+
+        function deleteUser(userId) {
+            if (confirm('Menghapus pengguna akan menghapus seluruh skill miliknya. Lanjutkan?')) {
+                let users = getStorage('users', []);
+                let skills = getStorage('skills', []);
+
+                users = users.filter(u => u.id !== userId);
+                skills = skills.filter(s => s.userId !== userId);
+
+                setStorage('users', users);
+                setStorage('skills', skills);
+                renderAdminDashboard();
+                showToast('Pengguna & skill terkait telah dihapus.', 'info');
+            }
+        }
+
+        // Admin Category Actions
+        function openAddCategoryModal() {
+            openModal('modal-add-category');
+        }
+
+        function handleAddCategory(e) {
+            e.preventDefault();
+            const name = document.getElementById('admin-cat-name').value.trim();
+            const icon = document.getElementById('admin-cat-icon').value.trim() || 'fa-tag';
+
+            let categories = getStorage('categories', []);
+            categories.push({ id: 'cat-' + Date.now(), name: name, icon: icon });
+            setStorage('categories', categories);
+
+            closeModal('modal-add-category');
+            showToast('Kategori baru ditambahkan!', 'success');
+            renderAdminDashboard();
+        }
+
+        function deleteCategory(catId) {
+            if (confirm('Hapus kategori ini?')) {
+                let categories = getStorage('categories', []);
+                categories = categories.filter(c => c.id !== catId);
+                setStorage('categories', categories);
+                renderAdminDashboard();
+                showToast('Kategori dihapus', 'info');
+            }
+        }
+
+        // TOAST NOTIFICATIONS SYSTEM
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            const bgClass = type === 'success' ? 'bg-slate-900 text-white' : type === 'error' ? 'bg-red-600 text-white' : 'bg-slate-800 text-white';
+            const icon = type === 'success' ? 'fa-circle-check text-emerald-400' : type === 'error' ? 'fa-circle-xmark text-red-300' : 'fa-circle-info text-sky-400';
+
+            toast.className = `${bgClass} px-4 py-3 rounded-2xl shadow-xl text-xs font-semibold flex items-center gap-2.5 transition-all duration-300 transform translate-y-2 opacity-0`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i> <span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // INITIALIZE APP
+        document.addEventListener('DOMContentLoaded', () => {
+            initLocalStorage();
+            navigateTo('home');
+        });
+    </script>
+</body>
+</html>
